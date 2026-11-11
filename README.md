@@ -24,7 +24,7 @@ herdr-app do layout.switch '{"name":"main-insights"}'
 
 ## Readings
 
-- Agent rows retain their status indicators and gain a narrow colored mark and percentage. Hover the meter for the latest observed usage, token counts when available, and its source. Collapsed groups keep a context annotation too.
+- Agent rows retain their status indicators and gain a right-aligned colored percentage in a fixed 30px column. Whole percentages are rounded down so the label stays consistent with the exact green/orange/red thresholds; hover for the precise reading, token counts when available, and its source. Unknown readings reserve the same space, and collapsed groups use the same annotation. The narrow sidebar rail retains a 3px colored mark.
 - Tabs show the highest context use among their agents and any Herdr Core child agents. Incomplete coverage cannot produce a green tab; a known orange/red reading still warns, with missing coverage explained in the tooltip.
 - The collector refreshes every 10 seconds, with at most four concurrent reads and no overlapping collection cycles. Readings expire after 35 seconds or a session/process change.
 - Codex: match its open session file/lock, excluding guardian sessions. When files are not held open, use its exact, unique OSC session name. Duplicate names are unknown. Read the latest request's `last_token_usage.total_tokens / model_context_window`, never session-wide cumulative totals. A compaction invalidates the previous reading until a new usage event arrives. Local database access is read-only and log reads are bounded to the last 4 MiB.
