@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.error
+gpui-kit.d.ts
+jsconfig.json
+preview.png
