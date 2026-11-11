@@ -1,0 +1,16 @@
+{
+  "groups": [
+    {"name": "Done", "color": "#93c5fd", "agents": [
+      {"name": "docs · Write the migration guide", "minutes": 2, "percent": 37, "status": "done", "icon": "C"}
+    ]},
+    {"name": "Working", "color": "#e6a23c", "agents": [
+      {"name": "web-app · Polish navigation", "minutes": 8, "percent": 68.6, "status": "working", "icon": "C"},
+      {"name": "api · Investigate slow requests", "minutes": 12, "percent": 86.4, "status": "working", "icon": "C", "selected": true},
+      {"name": "worker · Review the migration", "minutes": 19, "percent": 103.2, "status": "working", "icon": "A"}
+    ]},
+    {"name": "Idle", "color": "#94a3b8", "agents": [
+      {"name": "notes · Update the examples", "minutes": 4, "percent": 18, "status": "idle", "icon": "A"},
+      {"name": "tools · Waiting for a meter", "minutes": 6, "percent": null, "status": "idle", "icon": "·"}
+    ]}
+  ]
+}
