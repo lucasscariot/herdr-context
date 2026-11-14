@@ -2,6 +2,12 @@ export const KEY = "context-colors.snapshot";
 export const COLORS = { green: "#47b881", orange: "#e6a23c", red: "#ed6a6a" };
 export const band = (percent) => !Number.isFinite(percent) || percent < 0 ? "unknown" : percent >= 100 ? "red" : percent >= 80 ? "orange" : "green";
 export const percentLabel = (percent) => `${Math.floor(percent * 10) / 10}%`;
+// A point on the badge's ring, as a percentage of its box: 0% is 12 o'clock,
+// then clockwise. Kept here so the arc and its test agree on the geometry.
+export const ringPoint = (percent, radius = 42, center = 50) => {
+  const angle = (Math.max(0, Math.min(100, percent)) / 100) * Math.PI * 2 - Math.PI / 2;
+  return { x: center + radius * Math.cos(angle), y: center + radius * Math.sin(angle) };
+};
 export const sessionName = title => title.trim().replace(/^[\u2800-\u28ff]\s*/, "").replace(/^(?:\[[^\]]{1,8}\]\s*)?(?:Action Required|Working|Ready|Waiting|Idle|Done)\s*\|\s*/, "").replace(/ \| [^|]*$/, "").trim();
 
 export function currentReading(terminal, snapshot, now = Date.now()) {

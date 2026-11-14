@@ -14,14 +14,14 @@ Spot a full session while keeping your usual groups, pins, and order.
 
 </div>
 
-![Illustrative Herdr interface with aligned context percentages, existing status groups, and a detailed hover reading](docs/preview.svg)
+![Illustrative Herdr interface with compact context progress rings, existing status groups, and a detailed hover reading](docs/preview.svg)
 
-*Illustrative preview with sample agents. The colors, compact percentages, and hover details follow the plugin’s display rules.*
+*Illustrative preview with sample agents. The colors, context rings, and hover details follow the plugin’s display rules.*
 
 ## What you get
 
 - **A quick visual scan:** green, orange, and red readings reveal which sessions are filling up.
-- **A tidy agent list:** whole percentages align in a fixed 30px column, leaving room for names. Hover for the precise reading.
+- **A tidy agent list:** each reading is a 22px progress ring with the whole percentage inside, leaving room for names. Hover for the precise reading.
 - **Useful tab indicators:** each tab shows its highest agent reading, including Herdr Core child agents.
 - **Your existing setup:** Needs you, Done, Working, and Idle sections keep their usual ordering, pins, and controls.
 - **Honest unknowns:** missing, stale, or ambiguous readings show grey. A tab with incomplete coverage cannot claim green.
@@ -55,9 +55,9 @@ unverified. The terminal-only Herdr TUI is not required.
 | 🔴 **Red** | At least 100% |
 | **Grey —** | No reliable reading is currently available |
 
-Colors use the exact reading. The compact label rounds down, so `79.9%` stays
-green and displays `79%`; the tooltip keeps the decimal. Hover also reveals
-token counts when available and where the reading came from.
+The ring and its color use the exact reading. The number inside rounds down, so
+`79.9%` stays green and displays `79`; the tooltip keeps the decimal. Hover also
+reveals token counts when available and where the reading came from.
 
 Context usage describes the latest observed working window. Weekly quota is a
 separate measure: an agent can compact below 100% and still consume quota. The

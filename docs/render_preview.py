@@ -2,6 +2,7 @@
 
 from html import escape
 import json
+from math import cos, pi, sin
 from pathlib import Path
 
 
@@ -14,10 +15,28 @@ def color(percent):
     return "#ed6a6a" if percent >= 100 else "#e6a23c" if percent >= 80 else "#47b881"
 
 
+def ring(cx, cy, percent, radius=8):
+    """The meter: a track, an arc that starts at the top, and the whole number."""
+    fill = color(percent)
+    parts = [f'<circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" stroke="#3b4a63" stroke-width="1.5"/>']
+    if percent is not None:
+        turn = min(100, max(0, percent))
+        if turn >= 100:
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" stroke="{fill}" stroke-width="1.5"/>')
+        elif turn > 0:
+            angle = turn * 2 * pi / 100 - pi / 2
+            x, y = cx + radius * cos(angle), cy + radius * sin(angle)
+            large = 1 if turn > 50 else 0
+            parts.append(f'<path d="M {cx} {cy - radius} A {radius} {radius} 0 {large} 1 {x:.2f} {y:.2f}" fill="none" stroke="{fill}" stroke-width="1.5" stroke-linecap="round"/>')
+    label = "—" if percent is None else str(int(percent))
+    parts.append(f'<text x="{cx}" y="{cy + 2.6}" text-anchor="middle" font-size="7" font-weight="600" fill="{fill}">{label}</text>')
+    return "".join(parts)
+
+
 def render(data):
     parts = ['''<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="670" viewBox="0 0 1120 670" role="img" aria-labelledby="title description">
 <title id="title">Herdr Context Colors</title>
-<desc id="description">Illustrative agent list with Done, Working, and Idle groups, fixed-width context percentages, and a detailed hover card. Sample sessions show green, orange, red, and unknown readings.</desc>
+<desc id="description">Illustrative agent list with Done, Working, and Idle groups, compact context progress rings, and a detailed hover card. Sample sessions show green, orange, red, and unknown readings.</desc>
 <defs>
   <linearGradient id="backdrop" x2="1" y2="1"><stop stop-color="#101c31"/><stop offset="1" stop-color="#141526"/></linearGradient>
   <linearGradient id="card" x2="1" y2="1"><stop stop-color="#17243b"/><stop offset="1" stop-color="#192136"/></linearGradient>
@@ -46,21 +65,19 @@ def render(data):
             parts.append(f'<text x="59" y="{y - 1}" text-anchor="middle" font-size="12" font-weight="600" fill="#c4b5fd">{escape(agent["icon"])}</text>')
             parts.append(f'<text x="80" y="{y}" font-size="13" fill="{("#e2e8f0" if agent["status"] != "idle" else "#94a3b8")}">{escape(agent["name"])}</text>')
             parts.append(f'<text x="337" y="{y}" text-anchor="end" font-size="11" fill="#64748b">{agent["minutes"]}m</text>')
-            percent = agent["percent"]
-            label = "—" if percent is None else f"{int(percent)}%"
-            parts.append(f'<text x="396" y="{y}" text-anchor="end" font-size="12" fill="{color(percent)}">{label}</text>')
+            parts.append(ring(388, y - 4, agent["percent"]))
             if agent["status"] == "working":
                 parts.append(f'<circle cx="419" cy="{y - 5}" r="5" fill="none" stroke="#665c38" stroke-width="2"/><path d="M414,{y - 5}a5,5 0 0,1 7,-4" fill="none" stroke="#e6a23c" stroke-width="2" stroke-linecap="round"/>')
             else:
                 parts.append(f'<circle cx="419" cy="{y - 5}" r="3.5" fill="{("#93c5fd" if agent["status"] == "done" else "none")}" stroke="{("#93c5fd" if agent["status"] == "done" else "#64748b")}" stroke-width="1.5"/>')
             y += 43
         y += 17
-    parts.append('''
+    parts.append(f'''
 <rect x="470" y="88" width="171" height="31" rx="7" fill="#243047"/>
 <text x="485" y="108" font-size="12">Investigate requests</text>
-<text x="627" y="108" text-anchor="end" font-size="12" fill="#e6a23c">86%</text>
+{ring(620, 103, 86)}
 <text x="665" y="108" font-size="12" fill="#94a3b8">Polish navigation</text>
-<text x="796" y="108" font-size="12" fill="#47b881">68%</text>
+{ring(789, 103, 68)}
 <path d="M448 135H1096" stroke="#263247"/>
 <text x="486" y="191" font-size="11" font-weight="600" letter-spacing="2" fill="#5eead4">A LITTLE MORE VISIBILITY</text>
 <text x="486" y="232" font-size="31" font-weight="650">Know which session</text>
