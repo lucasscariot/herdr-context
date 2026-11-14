@@ -1,11 +1,22 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { band, currentReading, highestReading, percentLabel, sessionName } from "../mods/context-agents/model.js";
+import { band, currentReading, highestReading, percentLabel, ringPoint, sessionName } from "../mods/context-agents/model.js";
 
 test("thresholds are based on exact usage and never clamp over 100%", () => {
   for (const [value, expected] of [[0, "green"], [79.999, "green"], [80, "orange"], [99.999, "orange"], [100, "red"], [145, "red"], [null, "unknown"], [-1, "unknown"], [NaN, "unknown"], [Infinity, "unknown"]]) assert.equal(band(value), expected);
   assert.equal(percentLabel(79.999), "79.9%");
   assert.equal(percentLabel(145.06), "145%");
+});
+
+test("the ring starts at the top, turns clockwise, and clamps to one turn", () => {
+  const near = (value, expected) => assert.ok(Math.abs(value - expected) < 1e-9, `${value} != ${expected}`);
+  const point = (percent) => ringPoint(percent);
+  near(point(0).x, 50); near(point(0).y, 8);
+  near(point(25).x, 92); near(point(25).y, 50);
+  near(point(50).x, 50); near(point(50).y, 92);
+  near(point(75).x, 8); near(point(75).y, 50);
+  near(point(100).x, 50); near(point(100).y, 8);
+  near(point(-10).y, point(0).y); near(point(150).y, point(100).y);
 });
 
 test("a tab uses its worst agent and incomplete coverage cannot look green", () => {
